@@ -21,7 +21,7 @@ def data_loader():
     """training data : (a sample with 784 features, 10 element vector with element for a give digit is set)
     example: ([...],[0, 0, 0, 0, 1, 0, 0, 0,0,0] ) here the second vector is equivalent to  digit 6
     """
-    data_file = gzip.open('mnist.pkl.gz', 'rb')
+    data_file = gzip.open('./data/mnist.pkl.gz', 'rb')
     tr_data, val_data, ts_data = cPickle.load(data_file)
     data_file.close()
     input_samples = [np.reshape(x,(784,1)) for x in tr_data[0] ]
@@ -35,7 +35,6 @@ def data_loader():
     test_data = zip(test_in, ts_data[1])
     return train_data, v_data, test_data
     
-if __name__ == "__main__":
-    traing, validation, test = data_loader()
+
     
 
