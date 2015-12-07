@@ -12,8 +12,8 @@ input_layer = 784
 hidden = 15
 out = 10
  
-epochs = 30
-mini_batch_size = 10
+epochs = 9
+mini_batch_size = 30
 eta = 3.0
  
  
@@ -114,10 +114,11 @@ def backprop(x, y):
  
 def main():
     train_data, val_data, test_data = data.data_loader()
-     
-     
-                     
-    SGD(train_data, epochs, mini_batch_size, eta, test_data)
+                         
+    SGD(train_data, epochs, mini_batch_size, eta, val_data)
+    
+    n_test = len(test_data)
+    print "Test result {0} / {1}".format(evaluate(test_data), n_test)
      
 if __name__ == "__main__":
      main()
