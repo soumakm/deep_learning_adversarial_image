@@ -34,6 +34,9 @@ def data_loader():
     test_in = [np.reshape(x, (784,1)) for x in ts_data[0]]
     test_data = zip(test_in, ts_data[1])
     return train_data, v_data, test_data
+
+if __name__ == "__main__":
+    train_data, v_data, test_data = data_loader()
     
 
     
