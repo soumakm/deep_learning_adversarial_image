@@ -7,13 +7,17 @@ Created on Sat Nov 28 12:27:58 2015
 import load_mnist_data as data
 import random
 import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+
+from operator import add
 
 input_layer = 784
 hidden = 15
 out = 10
  
-epochs = 30
-mini_batch_size = 10
+epochs = 5
+mini_batch_size = 30
 eta = 3.0
  
  
@@ -36,7 +40,6 @@ def sigmoid_prime(x):
 def feedforward(x):
     global weights
     global biases
-
     for w0, w in zip(biases, weights):
         x = sigmoid(np.dot(w, x)+w0)
     return x    
@@ -48,6 +51,8 @@ def evaluate(test_data):
     
     test_results = [(np.argmax(feedforward(x)), y)
                     for (x, y) in test_data]
+   # for (x, y) in test_results:
+   #     print(x,y)
     return sum(int(x == y) for (x, y) in test_results)
     
 def update_mini_batch(mini_batch):
@@ -78,6 +83,7 @@ def SGD(training_data, epochs, mini_batch_size, eta,
         for mini_batch in mini_batches:
             update_mini_batch(mini_batch)
         if test_data:
+            test_data = [(x,y) for (x,y) in test_data]
             print "Epoch {0}: {1} / {2}".format(
                 j, evaluate(test_data), n_test)
         else:
@@ -114,10 +120,31 @@ def backprop(x, y):
  
 def main():
     train_data, val_data, test_data = data.data_loader()
-     
-     
-                     
-    SGD(train_data, epochs, mini_batch_size, eta, test_data)
+    #eta2 = np.abs([np.random.randn(sizes[0],1)])
+    eta2 =np.abs([ 0.8 for x in range(sizes[0])])
+    p1 = map(add,test_data[0][0],eta2)
+    p2 = map(add,test_data[1][0],eta2)
+    p = [(p1,test_data[0][1]), (p2,test_data[1][1])]
+    
+    q1 = test_data[0][0]
+    q2 = test_data[1][0]
+    q = [(q1,test_data[0][1]), (q2,test_data[1][1])]
+
+    qq = np.reshape(q1,(28,28))
+    plt.imshow(qq, cmap = cm.Greys_r)
+    plt.show()    
+    
+    pp = np.reshape(p1,(28,28))
+    plt.imshow(pp, cmap = cm.Greys_r)
+    plt.show()
+    #plt.imshow(pp, cmap = cm.Greys_r)
+    #plt.show()
+    SGD(train_data, epochs, mini_batch_size, eta, val_data)
+    n_test = len(p)
+    
+    print "Original result {0} / {1}".format(evaluate(q), n_test)
+    print "Adversarial {0} / {1}".format(evaluate(p), n_test)
+   
      
 if __name__ == "__main__":
      main()
